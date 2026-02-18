@@ -1,3 +1,32 @@
+### Delta of Call and Put vs Underlying Price
+
+This plot shows how option delta changes with respect to the underlying price.
+It highlights the nonlinear sensitivity of calls and puts and the role of moneyness.
+
+![Delta vs Price](images/delta_vs_price.png)
+
+---
+
+### Volatility Arbitrage — Implied Volatility > Realized Volatility
+
+When implied volatility is higher than realized volatility, 
+a delta-hedged short straddle tends to generate positive P&L on average.
+
+Histogram below shows the distribution of final P&L across many simulated paths.
+
+![Volatility Arbitrage Positive](images/vol_arb_positive.png)
+
+---
+
+### Volatility Arbitrage — Implied Volatility < Realized Volatility
+
+When implied volatility is lower than realized volatility,
+the same delta-hedged short straddle tends to lose money on average.
+
+This confirms the volatility risk premium intuition.
+
+![Volatility Arbitrage Negative](images/vol_arb_negative.png)
+
 # Option Pricing & Volatility Trading — Black–Scholes Project
 
 A complete quantitative finance project implementing the Black–Scholes framework, option Greeks, delta hedging, and volatility trading simulations.
