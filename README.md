@@ -163,9 +163,9 @@ Monte Carlo simulations confirm:
 
 Expected P&L approximately follows:
 
-$$
-\mathbb{E}[\text{P\&L}] \propto \sigma_{imp}^2 - \sigma_{real}^2
-$$
+Expected P&L approximately follows:
+
+E[P&L] ∝ σ_imp² − σ_real²
 
 This demonstrates volatility as a tradable relative-value risk factor.
 
