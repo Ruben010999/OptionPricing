@@ -38,27 +38,35 @@ the same delta-hedged short straddle tends to lose money on average.
 </p>
 
 
-# Option Pricing & Volatility Trading — Black–Scholes Project
+# Option Pricing & Volatility Trading — Black–Scholes + Machine Learning Project
 
-A complete quantitative finance project implementing the Black–Scholes framework, option Greeks, delta hedging, and volatility trading simulations.
+A complete quantitative finance project implementing:
 
-This project connects mathematical theory, numerical implementation, and trading intuition in a fully reproducible Python + SQL environment.
+- The Black–Scholes analytical framework  
+- Greeks and dynamic hedging  
+- Volatility arbitrage simulations  
+- Machine learning volatility forecasting  
+- Empirical strategy evaluation  
+
+This repository connects mathematical derivatives theory, numerical simulation, database engineering, and data-driven modeling in a fully reproducible Python + SQL environment.
 
 ---
 
 ## Project Overview
 
-This repository contains a full end-to-end implementation of:
+This project develops a coherent quantitative architecture progressing through four layers:
 
-- Black–Scholes option pricing
-- Analytical Greeks
-- Option payoff and strategy analysis
-- Delta hedging engine
-- Gamma scalping simulation
-- Realized vs implied volatility comparison
-- Volatility arbitrage Monte Carlo experiments
+1. **Analytical pricing (Black–Scholes)**
+2. **Risk decomposition (Greeks & hedging)**
+3. **Volatility arbitrage via simulation**
+4. **Machine learning volatility forecasting & strategy integration**
 
-The project moves from static pricing formulas to dynamic hedging and P&L distribution analysis.
+The objective is not only to implement formulas, but to connect:
+
+- Theory  
+- Simulation  
+- Statistical modeling  
+- Economic interpretation  
 
 ---
 
@@ -82,16 +90,18 @@ $$
 
 The project implements:
 
-- Call and put pricing
-- Greeks: $\Delta$, $\Gamma$, $\Theta$, $\nu$
-- Implied volatility inversion
-- Discrete delta hedging
+- Call and put pricing  
+- Greeks: $\Delta$, $\Gamma$, $\Theta$, $\nu$  
+- Implied volatility inversion  
+- Discrete delta hedging  
+
+This forms the structural backbone of the framework.
 
 ---
 
 ## Database Layer (SQL)
 
-All data is stored in a SQLite database.
+All market data is stored in a SQLite database.
 
 Tables include:
 
@@ -99,81 +109,166 @@ Tables include:
 - `asset_prices`
 - `option_quotes`
 
-The project uses SQL strictly for structured storage and retrieval.
+SQL is used strictly for structured storage and retrieval, separating data management from modeling logic.
 
 ---
 
-## Key Experiments
+## Core Modules
 
 ### 1. Greeks & Sensitivity Analysis
+
 - Analytical computation of $\Delta$, $\Gamma$, $\Theta$, $\nu$
-- Sensitivity across price and volatility
+- Sensitivity analysis across price and volatility
 
-### 2. Option Strategies
-- Protective put
-- Covered call
-- Bull call spread
-- Long straddle
+Local risk decomposition:
 
-Payoff and P&L diagrams at maturity.
-
-### 3. Delta Hedging Engine
-Discrete replication of:
-- Long/short straddles
-- Single call option
-
-Demonstrates hedging error under discrete rebalancing.
-
-### 4. Gamma Scalping
-Shows that:
-
-- If $\sigma_{real} > \sigma_{imp}$ → long gamma profits
-- If $\sigma_{real} < \sigma_{imp}$ → long gamma loses
-
-### 5. Volatility Arbitrage
-Monte Carlo simulation of short straddles:
-
-- Implied vol > realized vol → positive expected P&L
-- Implied vol < realized vol → negative expected P&L
-
-Demonstrates volatility as a tradable risk factor.
+$$
+dV \approx \Delta dS + \frac{1}{2}\Gamma dS^2 + \Theta dt
+$$
 
 ---
 
-## Main Insight
+### 2. Option Strategies
 
-This project shows that:
+- Protective put  
+- Covered call  
+- Bull call spread  
+- Long straddle  
 
-> Options are not directional bets — they are volatility instruments.
+Includes payoff diagrams and P&L analysis at maturity.
 
-The relationship between realized and implied volatility determines long-run profitability of delta-hedged option strategies.
+---
+
+### 3. Delta Hedging Engine
+
+Discrete replication of:
+
+- Long/short straddles  
+- Single call options  
+
+Demonstrates:
+
+- Replication error under discrete rebalancing  
+- Sensitivity to realized volatility  
+- Gamma-driven P&L dynamics  
+
+---
+
+### 4. Gamma Scalping & Volatility Arbitrage
+
+Monte Carlo simulations confirm:
+
+- If $\sigma_{real} > \sigma_{imp}$ → long gamma profits  
+- If $\sigma_{real} < \sigma_{imp}$ → long gamma loses  
+
+Expected P&L approximately follows:
+
+$$
+\mathbb{E}[P\&L] \propto \sigma_{imp}^2 - \sigma_{real}^2
+$$
+
+This demonstrates volatility as a tradable relative-value risk factor.
+
+---
+
+## 5. Machine Learning Volatility Forecasting
+
+The project extends beyond theoretical volatility comparison into empirical forecasting.
+
+### Feature Engineering
+
+Constructed rolling realized volatility features:
+
+- 5-day volatility  
+- 10-day volatility  
+- 20-day volatility  
+
+Target:
+
+- Next-period realized volatility (shifted forward to prevent leakage)
+
+Time-series split: 80% train / 20% validation.
+
+### Model
+
+- XGBoost Regressor  
+- Out-of-sample evaluation  
+
+### Results
+
+- Validation RMSE ≈ **0.00046**
+- Residual mean ≈ 0 (no strong bias)
+- Stable performance across volatility regimes
+- Captures volatility clustering effectively
+- Performance weakens during abrupt regime shifts
+
+---
+
+## Strategy Integration
+
+Volatility forecasts were integrated into a simple trading rule:
+
+- Long exposure when predicted volatility > median  
+- Short exposure otherwise  
+
+Out-of-sample results:
+
+- Strategy cumulative return ≈ **1.018**
+- Passive benchmark return ≈ **1.122**
+
+The strategy underperformed the benchmark.
+
+---
+
+## Key Insights
+
+This project establishes two major conclusions:
+
+1. **Volatility mispricing drives theoretical option profitability.**
+2. **Statistical forecast accuracy does not guarantee economic alpha.**
+
+Even with statistically sound volatility forecasts:
+
+- Signal transformation matters.
+- Market efficiency compresses simple predictive edges.
+- Monetizing small volatility improvements is structurally difficult.
+
+This bridges classical derivatives theory with modern machine learning reality.
 
 ---
 
 ## Technologies Used
 
-- Python
-- NumPy
-- Matplotlib
-- SQLite (SQL)
-- Jupyter Notebook
+- Python  
+- NumPy  
+- Matplotlib  
+- XGBoost  
+- SQLite (SQL)  
+- Jupyter Notebook  
 
 ---
 
-## Possible Extensions
+## Research Extensions
 
-- Stochastic volatility models (Heston)
-- Jump diffusion models (Merton)
-- Volatility surface calibration
-- Transaction cost modeling
-- Risk-neutral density extraction
+Future directions include:
+
+- Walk-forward validation  
+- SHAP interpretability analysis  
+- Stochastic volatility models (Heston)  
+- Jump diffusion (Merton)  
+- Volatility surface calibration  
+- Transaction cost modeling  
+- Quantile regression for tail risk  
 
 ---
 
 ## Author
 
 Ruben Kostanyan  
-Physics graduate | Quantitative Finance & Data Science
+Physics Graduate  
+Quantitative Finance & Data Science  
+
+Focused on derivatives modeling, volatility research, and systematic strategy design.
 
 ---
 
